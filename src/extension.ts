@@ -637,6 +637,7 @@ function formatItem(type: string, name: string, label: string, icon: string, gro
 	// Get the format configuration settings
 	let config = vscode.workspace.getConfiguration("oh-alignment-tool");
 	let formatStyle = config.formatStyle;
+	let newLineAfterItem = config.newLineAfterItem;
 
 	// Check for the formatting style in the user configuration
 	if (formatStyle === "Column") {
@@ -658,7 +659,17 @@ function formatItem(type: string, name: string, label: string, icon: string, gro
 		return formattedItem;
 	} else if (formatStyle === "Multiline") {
 		//Build the formatted item with multilines and return it
-		let formattedItem = type + "\n\t" + name + "\n\t" + label + "\n\t" + icon + "\n\t" + group + "\n\t" + tag + "\n\t" + channel;
+		let formattedItem = type + "\n\t" + name;
+
+		// Check if single part is empty or not. Only create new line if it is not empty.
+		formattedItem = label === "" ? formattedItem : formattedItem + "\n\t" + label;
+		formattedItem = icon === "" ? formattedItem : formattedItem + "\n\t" + icon;
+		formattedItem = group === "" ? formattedItem : formattedItem + "\n\t" + group;
+		formattedItem = tag === "" ? formattedItem : formattedItem + "\n\t" + tag;
+		formattedItem = channel === "" ? formattedItem : formattedItem + "\n\t" + channel;
+
+		formattedItem = newLineAfterItem === true ? formattedItem + "\n" : formattedItem;
+
 		return formattedItem;
 	} else {
 		// @todo add window message for user
